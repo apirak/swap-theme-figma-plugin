@@ -1,0 +1,52 @@
+{
+  "dependencies": {
+    "@create-figma-plugin/ui": "^2.1.5",
+    "@create-figma-plugin/utilities": "^2.1.5",
+    "preact": "^10"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.17.12",
+    "@create-figma-plugin/build": "^2.1.5",
+    "@create-figma-plugin/tsconfig": "^2.1.5",
+    "@figma/plugin-typings": "1.54.0",
+    "@types/jest": "^29.2.3",
+    "jest": "^29.3.1",
+    "prettier": "^2.6.2",
+    "ts-jest": "^29.0.3",
+    "typescript": "^4"
+  },
+  "scripts": {
+    "build": "build-figma-plugin --typecheck --minify",
+    "watch": "prettier --loglevel error --write '{src, test}/**/*.{ts, css}' && build-figma-plugin --typecheck --watch",
+    "test": "jest --watchAll"
+  },
+  "figma-plugin": {
+    "editorType": [
+      "figma"
+    ],
+    "id": "swap-themes",
+    "name": "Swap Themes",
+    "menu": [
+      {
+        "name": "Open UI",
+        "main": "src/main.ts",
+        "ui": "src/ui.tsx"
+      },
+      "-",
+      {
+        "name": "Swap to Day",
+        "main": {
+          "src": "src/swap.ts",
+          "handler": "swapToDay"
+        }
+      },
+      {
+        "name": "Swap to Night",
+        "main": {
+          "src": "src/swap.ts",
+          "handler": "swapToNight"
+        }
+      }
+    ]
+  }
+}
