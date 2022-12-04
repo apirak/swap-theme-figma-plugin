@@ -22,20 +22,23 @@ const loadLocalStyle = (): ColorStyle[] => {
       refName: removeSpace(style.name),
     });
   });
+
   return allStyle;
 };
 
+const swapTheme = (theme: string) => {
+  console.log(`Start swap to ${theme}`);
+  const localStyle = loadLocalStyle();
+  console.log("localStyle:", localStyle);
+};
+
 const swapToNight = () => {
-  console.log("Start swap to Night");
-  const x = loadLocalStyle();
-  console.log("x:", x);
+  swapTheme("Night");
   figma.closePlugin("close: swap to night");
 };
 
 const swapToDay = () => {
-  console.log("Start swap to Day");
-  const x = loadLocalStyle();
-  console.log("x:", x);
+  swapTheme("Day");
   figma.closePlugin("close: swap to day");
 };
 
