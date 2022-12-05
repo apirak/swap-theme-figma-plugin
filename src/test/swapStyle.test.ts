@@ -1,3 +1,4 @@
+import { IconLayerComponent16 } from "@create-figma-plugin/ui";
 import { createFigma } from "figma-api-stub";
 import { swapNodeTheme } from "../swap";
 import { loadStyle } from "../utility/style";
@@ -32,28 +33,37 @@ describe("walk in simple node", () => {
   styleNight.name = "Night / Primary";
   styleNight.paints = createStyle();
 
-  const frame1 = figma.createFrame();
-  frame1.name = "Frame1";
-  frame1.fillStyleId = styleDay.id;
-  frame1.strokeStyleId = styleDay.id;
-  page.appendChild(frame1);
-
   it("should swap Frame style from Day to Night", () => {
+    const node = figma.createFrame();
+    node.name = "Frame 1";
+    node.fillStyleId = styleDay.id;
+    node.strokeStyleId = styleDay.id;
+    page.appendChild(node);
+
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
-    if (frame1.fillStyleId !== figma.mixed && frame1.fillStyleId) {
-      const style = figma.getStyleById(frame1.fillStyleId);
-    }
+    swapNodeTheme(node, targetTheme);
 
-    swapNodeTheme(frame1, targetTheme);
+    expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
+      "Night / Primary"
+    );
+  });
 
-    let name: string = "";
-    if (frame1.fillStyleId !== figma.mixed && frame1.fillStyleId) {
-      const style = figma.getStyleById(frame1.fillStyleId);
-      name = style?.name ? style.name : "";
-    }
+  it("should swap Component style from Day to Night", () => {
+    const node = figma.createComponent();
+    node.name = "Component 1";
+    node.fillStyleId = styleDay.id;
+    node.strokeStyleId = styleDay.id;
+    page.appendChild(node);
 
-    expect(name).toEqual("Night / Primary");
+    let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
+    const targetTheme = loadStyle("Night", localStyleBasic);
+
+    swapNodeTheme(node, targetTheme);
+
+    expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
+      "Night / Primary"
+    );
   });
 });

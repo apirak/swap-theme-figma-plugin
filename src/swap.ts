@@ -31,8 +31,14 @@ const searchStyle = (styles: ColorStyle[], ref: string): string | undefined => {
   return id;
 };
 
+const setFillStyle = (node: SceneNode, styleId: string) => {};
+
 const swapNodeTheme = (node: SceneNode, localStyle: ColorStyle[]) => {
-  if (node.type == "FRAME") {
+  if (
+    node.type == "FRAME" ||
+    node.type == "COMPONENT" ||
+    node.type == "INSTANCE"
+  ) {
     if (node.fillStyleId !== figma.mixed && node.fillStyleId) {
       const style = figma.getStyleById(node.fillStyleId);
       if (style?.name) {
