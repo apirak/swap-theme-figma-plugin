@@ -2,6 +2,7 @@
   "dependencies": {
     "@create-figma-plugin/ui": "^2.1.5",
     "@create-figma-plugin/utilities": "^2.1.5",
+    "figma-api-stub": "^0.0.56",
     "preact": "^10"
   },
   "devDependencies": {

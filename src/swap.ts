@@ -1,38 +1,27 @@
+import { loadLocalStyle } from "./utility/style";
+
 let dayFolder = "Day";
 let nightFolder = "Night";
 
-type ColorStyle = {
-  id: string;
-  name: string;
-  refName: string;
-};
+const walkNodes = (nodes: readonly SceneNode[], callback?: Function) => {
+  let node;
+  let stop = false;
 
-const removeSpace = (s: string) => {
-  return s.replace(/\s+/g, "");
-};
-
-const loadLocalStyle = (): ColorStyle[] => {
-  let allStyle: ColorStyle[] = [];
-  const localStyles = figma.getLocalPaintStyles();
-
-  localStyles.forEach((style) => {
-    allStyle.push({
-      id: style.id,
-      name: style.name,
-      refName: removeSpace(style.name),
-    });
+  nodes.forEach((node) => {
+    if (callback) {
+      stop = callback(node);
+    }
+    if (node.type == "FRAME" || node.type == "GROUP") {
+      if (node.children) {
+        walkNodes(node.children, callback);
+      }
+    }
   });
-
-  return allStyle;
-};
-
-const walkNode = () => {
-  //https://github.com/gavinmcfarland/figma-node-decoder/blob/9249fb5af8855504260ad7738502df00e584cc6c/src/pluginGeneration.ts#L211
 };
 
 const swapTheme = (theme: string) => {
   console.log(`Start swap to ${theme}`);
-  const localStyle = loadLocalStyle();
+  const localStyle = loadLocalStyle(theme);
   console.log("localStyle:", localStyle);
   //https://github.com/gavinmcfarland/figma-node-decoder/blob/9249fb5af8855504260ad7738502df00e584cc6c/src/pluginGeneration.ts#L1055
 };
@@ -49,4 +38,5 @@ const swapToDay = () => {
 
 export { swapToDay, swapToNight };
 
-export { removeSpace };
+// For testing
+export { walkNodes };
