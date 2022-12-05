@@ -26,10 +26,15 @@ const loadLocalStyle = (): ColorStyle[] => {
   return allStyle;
 };
 
+const walkNode = () => {
+  //https://github.com/gavinmcfarland/figma-node-decoder/blob/9249fb5af8855504260ad7738502df00e584cc6c/src/pluginGeneration.ts#L211
+};
+
 const swapTheme = (theme: string) => {
   console.log(`Start swap to ${theme}`);
   const localStyle = loadLocalStyle();
   console.log("localStyle:", localStyle);
+  //https://github.com/gavinmcfarland/figma-node-decoder/blob/9249fb5af8855504260ad7738502df00e584cc6c/src/pluginGeneration.ts#L1055
 };
 
 const swapToNight = () => {
