@@ -1,4 +1,5 @@
-import { loadLocalStyle } from "./utility/style";
+import { loadLocalStyle, createReferenceName } from "./utility/style";
+import { ColorStyle } from "./utility/style";
 
 let dayFolder = "Day";
 let nightFolder = "Night";
@@ -19,11 +20,40 @@ const walkNodes = (nodes: readonly SceneNode[], callback?: Function) => {
   });
 };
 
+const searchStyle = (styles: ColorStyle[], ref: string): string | undefined => {
+  let id = undefined;
+  for (const style of styles) {
+    if (style.refName === ref) {
+      id = style.id;
+      break;
+    }
+  }
+  return id;
+};
+
+const swapNodeTheme = (node: SceneNode, localStyle: ColorStyle[]) => {
+  if (node.type == "FRAME") {
+    if (node.fillStyleId !== figma.mixed && node.fillStyleId) {
+      const style = figma.getStyleById(node.fillStyleId);
+      if (style?.name) {
+        const refName = createReferenceName(style.name);
+        const newId = searchStyle(localStyle, refName);
+        if (newId) {
+          const newStyle = figma.getStyleById(newId);
+          if (newStyle) {
+            node.fillStyleId = newStyle.id;
+          }
+        }
+      }
+    }
+  }
+};
+
 const swapTheme = (theme: string) => {
   console.log(`Start swap to ${theme}`);
-  const localStyle = loadLocalStyle(theme);
-  console.log("localStyle:", localStyle);
-  //https://github.com/gavinmcfarland/figma-node-decoder/blob/9249fb5af8855504260ad7738502df00e584cc6c/src/pluginGeneration.ts#L1055
+  const targetTheme = loadLocalStyle(theme);
+  console.log("localStyle:", targetTheme);
+  const selected = figma.currentPage.selection;
 };
 
 const swapToNight = () => {
@@ -39,4 +69,4 @@ const swapToDay = () => {
 export { swapToDay, swapToNight };
 
 // For testing
-export { walkNodes };
+export { walkNodes, swapNodeTheme };

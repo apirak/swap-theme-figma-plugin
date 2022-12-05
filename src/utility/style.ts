@@ -4,8 +4,8 @@ type ColorStyle = {
   refName: string;
 };
 
-const createReferenceName = (name: string, theme: string) => {
-  let refName = name.replace(/\s+/g, "").replace(`${theme}/`, "");
+const createReferenceName = (name: string): string => {
+  let refName = name.replace(/\s+/g, "").replace(/.+?\//, "");
   return refName;
 };
 
@@ -22,7 +22,7 @@ const loadStyle = (theme: string, styles: PaintStyle[]): ColorStyle[] => {
       allStyle.push({
         id: style.id,
         name: style.name,
-        refName: createReferenceName(style.name, theme),
+        refName: createReferenceName(style.name),
       });
     }
   });
