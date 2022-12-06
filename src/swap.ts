@@ -13,7 +13,13 @@ const walkNodes = (nodes: readonly SceneNode[], callback?: Function) => {
     if (callback) {
       stop = callback(node);
     }
-    if (node.type == "FRAME" || node.type == "GROUP") {
+    if (
+      node.type == "FRAME" ||
+      node.type == "GROUP" ||
+      node.type == "COMPONENT" ||
+      node.type == "INSTANCE" ||
+      node.type == "SECTION"
+    ) {
       if (node.children) {
         walkNodes(node.children, callback);
       }
@@ -45,7 +51,8 @@ const nodeWithFillAndStroke = (
     node.type == "STAR" ||
     node.type == "LINE" ||
     node.type == "TEXT" ||
-    node.type == "VECTOR"
+    node.type == "VECTOR" ||
+    node.type == "BOOLEAN_OPERATION"
   ) {
     return <FrameNode>node;
   }
