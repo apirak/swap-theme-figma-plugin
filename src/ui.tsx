@@ -6,43 +6,43 @@ import {
   render,
   Text,
   TextboxNumeric,
-  VerticalSpace
-} from '@create-figma-plugin/ui'
-import { emit } from '@create-figma-plugin/utilities'
-import { h } from 'preact'
-import { useCallback, useState } from 'preact/hooks'
+  VerticalSpace,
+} from "@create-figma-plugin/ui";
+import { emit } from "@create-figma-plugin/utilities";
+import { h } from "preact";
+import { useCallback, useState } from "preact/hooks";
 
-import { CloseHandler, CreateRectanglesHandler } from './types'
+import { CloseHandler, CreateRectanglesHandler } from "./types";
 
 function Plugin() {
-  const [count, setCount] = useState<number | null>(5)
-  const [countString, setCountString] = useState('5')
+  const [count, setCount] = useState<number | null>(5);
+  const [countString, setCountString] = useState("5");
   const handleCreateRectanglesButtonClick = useCallback(
     function () {
       if (count !== null) {
-        emit<CreateRectanglesHandler>('CREATE_RECTANGLES', count)
+        emit<CreateRectanglesHandler>("CREATE_RECTANGLES", count);
       }
     },
     [count]
-  )
+  );
   const handleCloseButtonClick = useCallback(function () {
-    emit<CloseHandler>('CLOSE')
-  }, [])
+    emit<CloseHandler>("CLOSE");
+  }, []);
   return (
-    <Container space="medium">
-      <VerticalSpace space="large" />
+    <Container space='medium'>
+      <VerticalSpace space='large' />
       <Text>
-        <Muted>Count</Muted>
+        <Muted>Set prefix for Day and Night mode.</Muted>
       </Text>
-      <VerticalSpace space="small" />
+      <VerticalSpace space='small' />
       <TextboxNumeric
         onNumericValueInput={setCount}
         onValueInput={setCountString}
         value={countString}
-        variant="border"
+        variant='border'
       />
-      <VerticalSpace space="extraLarge" />
-      <Columns space="extraSmall">
+      <VerticalSpace space='extraLarge' />
+      <Columns space='extraSmall'>
         <Button fullWidth onClick={handleCreateRectanglesButtonClick}>
           Create
         </Button>
@@ -50,9 +50,9 @@ function Plugin() {
           Close
         </Button>
       </Columns>
-      <VerticalSpace space="small" />
+      <VerticalSpace space='small' />
     </Container>
-  )
+  );
 }
 
-export default render(Plugin)
+export default render(Plugin);
