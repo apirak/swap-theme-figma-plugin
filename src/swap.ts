@@ -1,3 +1,4 @@
+import { Component } from "preact";
 import { loadLocalStyle, createReferenceName } from "./utility/style";
 import { ColorStyle } from "./utility/style";
 
@@ -31,41 +32,75 @@ const searchStyle = (styles: ColorStyle[], ref: string): string | undefined => {
   return id;
 };
 
-// const setFillStyle = (node: SceneNode, styleId: string | null) => {
-//   if (style?.name) {
-//         const refName = createReferenceName(style.name);
-//         const newId = searchStyle(localStyle, refName);
-//         if (newId) {
-//           node.fillStyleId = newId;
-//         }
-//   }
-// };
-
-const swapNodeTheme = (node: SceneNode, localStyle: ColorStyle[]) => {
+const nodeWithFillAndStroke = (
+  node: SceneNode | PageNode
+): FrameNode | ComponentNode | undefined => {
   if (
     node.type == "FRAME" ||
     node.type == "COMPONENT" ||
-    node.type == "INSTANCE"
+    node.type == "INSTANCE" ||
+    node.type == "RECTANGLE" ||
+    node.type == "ELLIPSE" ||
+    node.type == "POLYGON" ||
+    node.type == "STAR" ||
+    node.type == "LINE" ||
+    node.type == "TEXT" ||
+    node.type == "VECTOR"
   ) {
-    if (node.fillStyleId !== figma.mixed && node.fillStyleId) {
-      const style = figma.getStyleById(node.fillStyleId);
-      if (style?.name) {
-        const refName = createReferenceName(style.name);
-        const newId = searchStyle(localStyle, refName);
-        if (newId) {
-          node.fillStyleId = newId;
-          figma.mixed;
-        }
+    return <FrameNode>node;
+  }
+  return undefined;
+};
+
+const swapFill = (
+  frame: FrameNode | ComponentNode,
+  localStyle: ColorStyle[]
+) => {
+  if (frame.fillStyleId !== figma.mixed && frame.fillStyleId) {
+    const style = figma.getStyleById(frame.fillStyleId);
+    if (style?.name) {
+      const refName = createReferenceName(style.name);
+      const newId = searchStyle(localStyle, refName);
+      if (newId) {
+        frame.fillStyleId = newId;
       }
     }
   }
 };
 
+const swapStroke = (
+  frame: FrameNode | ComponentNode,
+  localStyle: ColorStyle[]
+) => {
+  if (frame.strokeStyleId) {
+    const style = figma.getStyleById(frame.strokeStyleId);
+    if (style?.name) {
+      const refName = createReferenceName(style.name);
+      const newId = searchStyle(localStyle, refName);
+      if (newId) {
+        frame.strokeStyleId = newId;
+      }
+    }
+  }
+};
+
+const swapNodeTheme = (
+  node: SceneNode | PageNode,
+  localStyle: ColorStyle[]
+) => {
+  const frame = nodeWithFillAndStroke(node);
+  if (frame) {
+    swapFill(frame, localStyle);
+    swapStroke(frame, localStyle);
+  }
+};
+
 const swapTheme = (theme: string) => {
-  console.log(`Start swap to ${theme}`);
   const targetTheme = loadLocalStyle(theme);
-  console.log("localStyle:", targetTheme);
   const selected = figma.currentPage.selection;
+  walkNodes(selected, (node: SceneNode | PageNode) => {
+    swapNodeTheme(node, targetTheme);
+  });
 };
 
 const swapToNight = () => {

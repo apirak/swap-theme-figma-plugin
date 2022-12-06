@@ -66,4 +66,41 @@ describe("walk in simple node", () => {
       "Night / Primary"
     );
   });
+
+  it("should swap Instant style from Day to Night", () => {
+    const component = figma.createComponent();
+    component.name = "Component 1";
+    component.fillStyleId = styleDay.id;
+    component.strokeStyleId = styleDay.id;
+    const node = component.createInstance();
+    page.appendChild(node);
+
+    let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
+    const targetTheme = loadStyle("Night", localStyleBasic);
+
+    swapNodeTheme(node, targetTheme);
+
+    if (node.fillStyleId !== figma.mixed && node.effectStyleId) {
+      expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
+        "Night / Primary"
+      );
+    }
+  });
+
+  it("should swap Rectangle style from Day to Night", () => {
+    const node = figma.createRectangle();
+    node.name = "rectangle 1";
+    node.fillStyleId = styleDay.id;
+    node.strokeStyleId = styleDay.id;
+    page.appendChild(node);
+
+    let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
+    const targetTheme = loadStyle("Night", localStyleBasic);
+
+    swapNodeTheme(node, targetTheme);
+
+    expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
+      "Night / Primary"
+    );
+  });
 });
