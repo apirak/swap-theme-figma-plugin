@@ -31,7 +31,15 @@ const searchStyle = (styles: ColorStyle[], ref: string): string | undefined => {
   return id;
 };
 
-const setFillStyle = (node: SceneNode, styleId: string) => {};
+// const setFillStyle = (node: SceneNode, styleId: string | null) => {
+//   if (style?.name) {
+//         const refName = createReferenceName(style.name);
+//         const newId = searchStyle(localStyle, refName);
+//         if (newId) {
+//           node.fillStyleId = newId;
+//         }
+//   }
+// };
 
 const swapNodeTheme = (node: SceneNode, localStyle: ColorStyle[]) => {
   if (
@@ -45,10 +53,8 @@ const swapNodeTheme = (node: SceneNode, localStyle: ColorStyle[]) => {
         const refName = createReferenceName(style.name);
         const newId = searchStyle(localStyle, refName);
         if (newId) {
-          const newStyle = figma.getStyleById(newId);
-          if (newStyle) {
-            node.fillStyleId = newStyle.id;
-          }
+          node.fillStyleId = newId;
+          figma.mixed;
         }
       }
     }
