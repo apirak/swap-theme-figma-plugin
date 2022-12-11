@@ -1,0 +1,19 @@
+.style {
+  color: black;
+}
+
+.label {
+  justify-content: unset;
+  background-color: aqua;
+  color: #bbb;
+}
+
+.themeRow {
+  height: 28px;
+  display: flex;
+  flex-direction: row;
+}
+
+.inputValue {
+  flex-grow: 1;
+}

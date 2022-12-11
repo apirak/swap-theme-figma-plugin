@@ -5,6 +5,25 @@ import { ColorStyle } from "./utility/style";
 let dayFolder = "Day";
 let nightFolder = "Night";
 
+const storageKeys = {
+  DAY: "dayFromStorage",
+  NIGHT: "nightFromStorage",
+};
+
+const initPlugin = async () => {
+  let dayFolderStorage = await figma.clientStorage.getAsync(storageKeys.DAY);
+  let nightFolderStorage = await figma.clientStorage.getAsync(
+    storageKeys.NIGHT
+  );
+
+  if (typeof dayFolderStorage === "undefined") {
+    await figma.clientStorage.setAsync(storageKeys.DAY, dayFolder);
+  }
+  if (typeof nightFolderStorage == "undefined") {
+    await figma.clientStorage.setAsync(storageKeys.NIGHT, nightFolder);
+  }
+};
+
 const walkNodes = (nodes: readonly SceneNode[], callback?: Function) => {
   let node;
   let stop = false;
@@ -110,17 +129,27 @@ const swapTheme = (theme: string) => {
   });
 };
 
-const swapToNight = () => {
-  swapTheme("Night");
-  figma.closePlugin("close: swap to night");
-};
-
 const swapToDay = () => {
-  swapTheme("Day");
-  figma.closePlugin("close: swap to day");
+  swapTheme(dayFolder);
+  figma.closePlugin(`close: swap to ${dayFolder}`);
 };
 
-export { swapToDay, swapToNight };
+const swapToNight = () => {
+  swapTheme(nightFolder);
+  figma.closePlugin(`close: swap to ${nightFolder}`);
+};
+
+const justSwapToDay = () => {
+  swapTheme(dayFolder);
+  figma.notify(`Swap to Day 🌞`);
+};
+
+const justSwapToNight = () => {
+  swapTheme(nightFolder);
+  figma.notify(`Swap to Night 🌝`);
+};
+
+export { swapToDay, swapToNight, initPlugin, justSwapToDay, justSwapToNight };
 
 // For testing
 export { walkNodes, swapNodeTheme };
