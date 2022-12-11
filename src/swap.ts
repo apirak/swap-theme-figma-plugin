@@ -24,6 +24,16 @@ const initPlugin = async () => {
   }
 };
 
+const setDayFolder = async (name: string) => {
+  dayFolder = name;
+  await figma.clientStorage.setAsync(storageKeys.DAY, dayFolder);
+};
+
+const setNightFolder = async (name: string) => {
+  nightFolder = name;
+  await figma.clientStorage.setAsync(storageKeys.NIGHT, dayFolder);
+};
+
 const walkNodes = (nodes: readonly SceneNode[], callback?: Function) => {
   let node;
   let stop = false;
@@ -149,7 +159,15 @@ const justSwapToNight = () => {
   figma.notify(`Swap to Night 🌝`);
 };
 
-export { swapToDay, swapToNight, initPlugin, justSwapToDay, justSwapToNight };
+export {
+  swapToDay,
+  swapToNight,
+  initPlugin,
+  justSwapToDay,
+  justSwapToNight,
+  setDayFolder,
+  setNightFolder,
+};
 
 // For testing
 export { walkNodes, swapNodeTheme };

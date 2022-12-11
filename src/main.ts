@@ -1,6 +1,11 @@
-import { once, showUI } from "@create-figma-plugin/utilities";
+import { on, once, showUI } from "@create-figma-plugin/utilities";
 // import { CloseHandler, CreateRectanglesHandler } from "./types";
-import { SwapThemeToDayHandler, SwapThemeToNightHandler } from "./types";
+import {
+  SwapThemeToDayHandler,
+  SwapThemeToNightHandler,
+  SetDayFolderHandler,
+  SetNightFolderHandler,
+} from "./types";
 import { initPlugin, justSwapToDay, justSwapToNight } from "./swap";
 
 export default function () {
@@ -10,11 +15,21 @@ export default function () {
   //   figma.closePlugin();
   // });
 
-  once<SwapThemeToDayHandler>("SWAP_TO_DAY", function () {
+  on<SetNightFolderHandler>("SET_NIGHT_FOLDER", function () {
+    console.log("SET NIGHT Folder");
+  });
+
+  on<SetDayFolderHandler>("SET_DAY_FOLDER", function () {
+    console.log("SET DAY Folder");
+  });
+
+  on<SwapThemeToDayHandler>("SWAP_TO_DAY", function () {
+    console.log("call justSwapToDay()");
     justSwapToDay();
   });
 
-  once<SwapThemeToNightHandler>("SWAP_TO_NIGHT", function () {
+  on<SwapThemeToNightHandler>("SWAP_TO_NIGHT", function () {
+    console.log("call justSwapToNight()");
     justSwapToNight();
   });
 

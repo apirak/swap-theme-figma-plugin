@@ -23,6 +23,8 @@ import {
   CreateRectanglesHandler,
   SwapThemeToDayHandler,
   SwapThemeToNightHandler,
+  SetDayFolderHandler,
+  SetNightFolderHandler,
 } from "./types";
 
 function Plugin() {
@@ -37,11 +39,20 @@ function Plugin() {
   //   [count]
   // );
 
-  const [value, setValue] = useState<string>("Day");
-  function handleInput(event: JSX.TargetedEvent<HTMLInputElement>) {
+  const [dayFolder, setDayFolder] = useState<string>("Day");
+  function handleDayInput(event: JSX.TargetedEvent<HTMLInputElement>) {
     const newValue = event.currentTarget.value;
-    console.log(newValue);
-    setValue(newValue);
+    console.log("day:", newValue);
+    setDayFolder(newValue);
+    emit<SetDayFolderHandler>("SET_DAY_FOLDER");
+  }
+
+  const [nightFolder, setNightFolder] = useState<string>("Night");
+  function handleNightInput(event: JSX.TargetedEvent<HTMLInputElement>) {
+    const newValue = event.currentTarget.value;
+    console.log("night:", newValue);
+    setNightFolder(newValue);
+    emit<SetNightFolderHandler>("SET_NIGHT_FOLDER");
   }
 
   const handleSwapToDayClick = useCallback(function () {
@@ -79,7 +90,11 @@ function Plugin() {
       <div class={styles.themeRow}>
         <MiddleAlign style={label}>Day:</MiddleAlign>
         <div class={styles.inputValue}>
-          <Textbox onInput={handleInput} value={value} variant='underline' />
+          <Textbox
+            onInput={handleDayInput}
+            value={dayFolder}
+            variant='underline'
+          />
         </div>
         <IconButton onClick={handleSwapToDayClick}>
           <IconSwap32 />
@@ -89,7 +104,11 @@ function Plugin() {
       <div class={styles.themeRow}>
         <MiddleAlign style={label}>Night:</MiddleAlign>
         <div class={styles.inputValue}>
-          <Textbox onInput={handleInput} value={"Night"} variant='underline' />
+          <Textbox
+            onInput={handleNightInput}
+            value={nightFolder}
+            variant='underline'
+          />
         </div>
         <IconButton style={swapIcon} onClick={handleSwapToNightClick}>
           <IconSwap32 />
