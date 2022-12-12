@@ -1,16 +1,12 @@
 import {
-  Button,
-  Columns,
   Container,
   Muted,
   render,
   Text,
-  TextboxNumeric,
   VerticalSpace,
   IconSwap32,
   Textbox,
   MiddleAlign,
-  Inline,
   IconButton,
 } from "@create-figma-plugin/ui";
 import { emit, on } from "@create-figma-plugin/utilities";
@@ -19,7 +15,6 @@ import { useCallback, useState } from "preact/hooks";
 import styles from "./style.css";
 
 import {
-  CloseHandler,
   SwapThemeToDayHandler,
   SwapThemeToNightHandler,
   SetDayFolderHandler,
@@ -63,10 +58,6 @@ function Plugin() {
     width: "48px",
   };
 
-  const swapIcon = {
-    width: "30px",
-  };
-
   return (
     <Container space='medium'>
       <VerticalSpace space='large' />
@@ -97,7 +88,7 @@ function Plugin() {
             variant='underline'
           />
         </div>
-        <IconButton style={swapIcon} onClick={handleSwapToNightClick}>
+        <IconButton onClick={handleSwapToNightClick}>
           <IconSwap32 />
         </IconButton>
       </div>

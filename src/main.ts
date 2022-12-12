@@ -19,22 +19,18 @@ import { emit } from "@create-figma-plugin/utilities";
 
 export default function () {
   on<SetDayFolderHandler>("SET_DAY_FOLDER", function (newName: string) {
-    console.log("call set night folder to:", newName);
     setDayFolder(newName);
   });
 
   on<SetNightFolderHandler>("SET_NIGHT_FOLDER", function (newName: string) {
-    console.log("call set day folder to:", newName);
     setNightFolder(newName);
   });
 
   on<SwapThemeToDayHandler>("SWAP_TO_DAY", function () {
-    console.log("call justSwapToDay()");
     justSwapToDay();
   });
 
   on<SwapThemeToNightHandler>("SWAP_TO_NIGHT", function () {
-    console.log("call justSwapToNight()");
     justSwapToNight();
   });
 

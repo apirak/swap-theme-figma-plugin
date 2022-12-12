@@ -1,10 +1,5 @@
 import { EventHandler } from "@create-figma-plugin/utilities";
 
-export interface CloseHandler extends EventHandler {
-  name: "CLOSE";
-  handler: () => void;
-}
-
 export interface SwapThemeToDayHandler extends EventHandler {
   name: "SWAP_TO_DAY";
   handler: () => void;
