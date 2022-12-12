@@ -6,18 +6,26 @@ import {
   SetDayFolderHandler,
   SetNightFolderHandler,
 } from "./types";
-import { initPlugin, justSwapToDay, justSwapToNight } from "./swap";
+import {
+  initPlugin,
+  justSwapToDay,
+  justSwapToNight,
+  setDayFolder,
+  setNightFolder,
+  getDayFolder,
+  getNightFolder,
+} from "./swap";
 import { emit } from "@create-figma-plugin/utilities";
 
 export default function () {
-  initPlugin();
-
-  on<SetNightFolderHandler>("SET_NIGHT_FOLDER", function (newName: string) {
-    console.log("SET NIGHT Folder To:", newName);
+  on<SetDayFolderHandler>("SET_DAY_FOLDER", function (newName: string) {
+    console.log("call set night folder to:", newName);
+    setDayFolder(newName);
   });
 
-  on<SetDayFolderHandler>("SET_DAY_FOLDER", function (newName: string) {
-    console.log("SET DAY Folder To:", newName);
+  on<SetNightFolderHandler>("SET_NIGHT_FOLDER", function (newName: string) {
+    console.log("call set day folder to:", newName);
+    setNightFolder(newName);
   });
 
   on<SwapThemeToDayHandler>("SWAP_TO_DAY", function () {
@@ -31,7 +39,9 @@ export default function () {
   });
 
   showUI({ height: 150, width: 300 });
-
-  emit<SetDayFolderHandler>("SET_DAY_FOLDER", "SunDay");
-  emit<SetNightFolderHandler>("SET_NIGHT_FOLDER", "MidNight");
+  const setupUI = (async () => {
+    await initPlugin();
+    await emit<SetDayFolderHandler>("SET_DAY_FOLDER", getDayFolder());
+    await emit<SetNightFolderHandler>("SET_NIGHT_FOLDER", getNightFolder());
+  })();
 }

@@ -16,22 +16,42 @@ const initPlugin = async () => {
     storageKeys.NIGHT
   );
 
+  console.log("day storage:", dayFolderStorage);
+  console.log("night storage:", nightFolderStorage);
+
   if (typeof dayFolderStorage === "undefined") {
     await figma.clientStorage.setAsync(storageKeys.DAY, dayFolder);
+  } else {
+    dayFolder = dayFolderStorage;
   }
   if (typeof nightFolderStorage == "undefined") {
     await figma.clientStorage.setAsync(storageKeys.NIGHT, nightFolder);
+  } else {
+    dayFolder = dayFolderStorage;
   }
+
+  console.log("dayFolder", dayFolder);
+  console.log("nightFolder", nightFolder);
 };
 
 const setDayFolder = async (name: string) => {
+  console.log("day x");
+  await figma.clientStorage.setAsync(storageKeys.DAY, name);
   dayFolder = name;
-  await figma.clientStorage.setAsync(storageKeys.DAY, dayFolder);
 };
 
 const setNightFolder = async (name: string) => {
+  console.log("night x");
+  await figma.clientStorage.setAsync(storageKeys.NIGHT, name);
   nightFolder = name;
-  await figma.clientStorage.setAsync(storageKeys.NIGHT, dayFolder);
+};
+
+const getDayFolder = (): string => {
+  return dayFolder;
+};
+
+const getNightFolder = (): string => {
+  return nightFolder;
 };
 
 const walkNodes = (nodes: readonly SceneNode[], callback?: Function) => {
@@ -167,6 +187,8 @@ export {
   justSwapToNight,
   setDayFolder,
   setNightFolder,
+  getDayFolder,
+  getNightFolder,
 };
 
 // For testing
