@@ -13,7 +13,7 @@ import {
   Inline,
   IconButton,
 } from "@create-figma-plugin/ui";
-import { emit } from "@create-figma-plugin/utilities";
+import { emit, on } from "@create-figma-plugin/utilities";
 import { h, JSX } from "preact";
 import { useCallback, useState } from "preact/hooks";
 import styles from "./style.css";
@@ -40,19 +40,18 @@ function Plugin() {
   // );
 
   const [dayFolder, setDayFolder] = useState<string>("Day");
+  const [nightFolder, setNightFolder] = useState<string>("Night");
+
   function handleDayInput(event: JSX.TargetedEvent<HTMLInputElement>) {
-    const newValue = event.currentTarget.value;
-    console.log("day:", newValue);
-    setDayFolder(newValue);
-    emit<SetDayFolderHandler>("SET_DAY_FOLDER");
+    const newName = event.currentTarget.value;
+    setDayFolder(newName);
+    emit<SetDayFolderHandler>("SET_DAY_FOLDER", newName);
   }
 
-  const [nightFolder, setNightFolder] = useState<string>("Night");
   function handleNightInput(event: JSX.TargetedEvent<HTMLInputElement>) {
-    const newValue = event.currentTarget.value;
-    console.log("night:", newValue);
-    setNightFolder(newValue);
-    emit<SetNightFolderHandler>("SET_NIGHT_FOLDER");
+    const newName = event.currentTarget.value;
+    setNightFolder(newName);
+    emit<SetNightFolderHandler>("SET_NIGHT_FOLDER", newName);
   }
 
   const handleSwapToDayClick = useCallback(function () {
@@ -63,13 +62,13 @@ function Plugin() {
     emit<SwapThemeToNightHandler>("SWAP_TO_NIGHT");
   }, []);
 
-  const handleCloseButtonClick = useCallback(function () {
-    emit<CloseHandler>("CLOSE");
-  }, []);
+  on<SetDayFolderHandler>("SET_DAY_FOLDER", (newName: string) => {
+    setDayFolder(newName);
+  });
 
-  function handleClick(event: JSX.TargetedEvent<HTMLButtonElement>) {
-    console.log(event);
-  }
+  on<SetNightFolderHandler>("SET_NIGHT_FOLDER", (newName: string) => {
+    setNightFolder(newName);
+  });
 
   const label = {
     "justify-content": "unset",

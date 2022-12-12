@@ -22,10 +22,10 @@ export interface SwapThemeToNightHandler extends EventHandler {
 
 export interface SetDayFolderHandler extends EventHandler {
   name: "SET_DAY_FOLDER";
-  handler: () => void;
+  handler: (newName: string) => void;
 }
 
 export interface SetNightFolderHandler extends EventHandler {
   name: "SET_NIGHT_FOLDER";
-  handler: () => void;
+  handler: (newName: string) => void;
 }
