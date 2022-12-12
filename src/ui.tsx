@@ -51,10 +51,12 @@ function Plugin() {
   }, []);
 
   on<SetDayFolderHandler>("SET_DAY_FOLDER", (newName: string) => {
+    console.log("UI set day folder:", newName);
     setDayFolder(newName);
   });
 
   on<SetNightFolderHandler>("SET_NIGHT_FOLDER", (newName: string) => {
+    console.log("UI set night folder:", newName);
     setNightFolder(newName);
   });
 
