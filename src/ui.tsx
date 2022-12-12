@@ -20,7 +20,6 @@ import styles from "./style.css";
 
 import {
   CloseHandler,
-  CreateRectanglesHandler,
   SwapThemeToDayHandler,
   SwapThemeToNightHandler,
   SetDayFolderHandler,
@@ -28,17 +27,6 @@ import {
 } from "./types";
 
 function Plugin() {
-  // const [count, setCount] = useState<number | null>(5);
-  // const [countString, setCountString] = useState("5");
-  // const handleCreateRectanglesButtonClick = useCallback(
-  //   function () {
-  //     if (count !== null) {
-  //       emit<CreateRectanglesHandler>("CREATE_RECTANGLES", count);
-  //     }
-  //   },
-  //   [count]
-  // );
-
   const [dayFolder, setDayFolder] = useState<string>("Day");
   const [nightFolder, setNightFolder] = useState<string>("Night");
 
