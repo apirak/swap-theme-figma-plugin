@@ -8,6 +8,7 @@ import { ReferenceStyle } from "./utility/style";
 
 let dayFolder = "Day";
 let nightFolder = "Night";
+let count = 0;
 
 const storageKeys = {
   DAY: "dayFromStorage",
@@ -50,6 +51,14 @@ const getDayFolder = (): string => {
 
 const getNightFolder = (): string => {
   return nightFolder;
+};
+
+const getCount = (): number => {
+  return count;
+};
+
+const resetCount = () => {
+  count = 0;
 };
 
 const walkNodes = (nodes: readonly SceneNode[], callback?: Function) => {
@@ -131,6 +140,7 @@ const swapEffect = (
       const newId = searchStyle(localStyle, refName);
       if (newId) {
         frame.effectStyleId = newId;
+        count++;
       }
     }
   }
@@ -147,6 +157,7 @@ const swapFill = (
       const newId = searchStyle(localStyle, refName);
       if (newId) {
         frame.fillStyleId = newId;
+        count++;
       }
     }
   }
@@ -163,6 +174,7 @@ const swapStroke = (
       const newId = searchStyle(localStyle, refName);
       if (newId) {
         frame.strokeStyleId = newId;
+        count++;
       }
     }
   }
@@ -178,6 +190,7 @@ const swapMixTextFill = (textNode: TextNode, localStyle: ReferenceStyle[]) => {
           const newId = searchStyle(localStyle, refName);
           if (newId) {
             textNode.setRangeFillStyleId(segment.start, segment.end, newId);
+            count++;
           }
         }
       }
@@ -208,29 +221,40 @@ const swapTheme = (theme: string) => {
   const targetTheme = loadLocalStyle(theme);
   const targetEffect = loadLocalEffect(theme);
   const selected = figma.currentPage.selection;
+  resetCount();
   walkNodes(selected, (node: SceneNode | PageNode) => {
     swapNodeTheme(node, targetTheme, targetEffect);
   });
 };
 
+const prualStyle = (count: number): string => {
+  return count > 1 ? "styles" : "style";
+};
+
+const notifySwap = (theme: string) => {
+  figma.notify(`Swap to ${theme} (${count} ${prualStyle(count)})`);
+};
+
 const swapToDay = () => {
   swapTheme(dayFolder);
-  figma.closePlugin(`close: swap to ${dayFolder}`);
+  notifySwap("Day 🌞");
+  figma.closePlugin();
 };
 
 const swapToNight = () => {
   swapTheme(nightFolder);
-  figma.closePlugin(`close: swap to ${nightFolder}`);
+  notifySwap("Night 🌚");
+  figma.closePlugin();
 };
 
 const justSwapToDay = () => {
   swapTheme(dayFolder);
-  figma.notify(`Swap to Day 🌞`);
+  notifySwap("Day 🌞");
 };
 
 const justSwapToNight = () => {
   swapTheme(nightFolder);
-  figma.notify(`Swap to Night 🌝`);
+  notifySwap("Night 🌚");
 };
 
 export {
@@ -246,4 +270,4 @@ export {
 };
 
 // For testing
-export { walkNodes, swapNodeTheme };
+export { walkNodes, swapNodeTheme, getCount, resetCount };

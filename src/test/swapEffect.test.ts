@@ -1,7 +1,6 @@
 import { createFigma } from "figma-api-stub";
-import { style } from "../style.css";
-import { swapNodeTheme } from "../swap";
-import { loadStyle, loadEffect } from "../utility/style";
+import { resetCount, swapNodeTheme, getCount } from "../swap";
+import { loadEffect } from "../utility/style";
 
 describe("walk in simple node", () => {
   // @ts-ignore
@@ -64,13 +63,16 @@ describe("walk in simple node", () => {
     node.effectStyleId = effectDay.id;
     page.appendChild(node);
 
+    resetCount();
     let localStyleBasic: EffectStyle[] = [effectDay, effectNight];
     const targetTheme = loadEffect("Night", localStyleBasic);
 
+    resetCount();
     swapNodeTheme(node, [], targetTheme);
 
     expect(figma.getStyleById(node.effectStyleId)?.name).toEqual(
       "Night / Drop Primary"
     );
+    expect(getCount()).toEqual(1);
   });
 });

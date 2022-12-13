@@ -1,5 +1,5 @@
 import { createFigma } from "figma-api-stub";
-import { swapNodeTheme } from "../swap";
+import { swapNodeTheme, getCount, resetCount } from "../swap";
 import { loadStyle } from "../utility/style";
 
 describe("walk in simple node", () => {
@@ -47,11 +47,13 @@ describe("walk in simple node", () => {
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
+    resetCount();
     swapNodeTheme(node, targetTheme, []);
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"
     );
+    expect(getCount()).toEqual(2);
   });
 
   it("should swap Component style from Day to Night", () => {
@@ -64,11 +66,13 @@ describe("walk in simple node", () => {
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
+    resetCount();
     swapNodeTheme(node, targetTheme, []);
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"
     );
+    expect(getCount()).toEqual(2);
   });
 
   it("should swap Instant style from Day to Night", () => {
@@ -76,19 +80,21 @@ describe("walk in simple node", () => {
     component.name = "Component 1";
     component.fillStyleId = styleDay.id;
     component.strokeStyleId = styleDay.id;
-    const node = component.createInstance();
-    page.appendChild(node);
+    const instant = component.createInstance();
+    instant.fillStyleId = component.fillStyleId;
+    instant.strokeStyleId = component.strokeStyleId;
+    page.appendChild(instant);
 
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
-    swapNodeTheme(node, targetTheme, []);
+    resetCount();
+    swapNodeTheme(instant, targetTheme, []);
 
-    if (node.fillStyleId !== figma.mixed && node.effectStyleId) {
-      expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
-        "Night / Primary"
-      );
-    }
+    expect(figma.getStyleById(instant.fillStyleId)?.name).toEqual(
+      "Night / Primary"
+    );
+    expect(getCount()).toEqual(2);
   });
 
   it("should swap Rectangle style from Day to Night", () => {
@@ -101,11 +107,13 @@ describe("walk in simple node", () => {
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
+    resetCount();
     swapNodeTheme(node, targetTheme, []);
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"
     );
+    expect(getCount()).toEqual(2);
   });
 
   it("should preform well when style name is empty", () => {
@@ -118,10 +126,12 @@ describe("walk in simple node", () => {
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight, styleEmptyName];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
+    resetCount();
     swapNodeTheme(node, targetTheme, []);
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"
     );
+    expect(getCount()).toEqual(2);
   });
 });
