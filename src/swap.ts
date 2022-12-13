@@ -87,25 +87,36 @@ const searchStyle = (styles: ColorStyle[], ref: string): string | undefined => {
   return id;
 };
 
-const nodeWithFillAndStroke = (
+const nodeWithSimpleFillAndStroke = (
   node: SceneNode | PageNode
 ): FrameNode | ComponentNode | undefined => {
   if (
-    node.type == "FRAME" ||
-    node.type == "COMPONENT" ||
-    node.type == "INSTANCE" ||
-    node.type == "RECTANGLE" ||
-    node.type == "ELLIPSE" ||
-    node.type == "POLYGON" ||
-    node.type == "STAR" ||
-    node.type == "LINE" ||
-    node.type == "TEXT" ||
-    node.type == "VECTOR" ||
-    node.type == "BOOLEAN_OPERATION"
+    (node.type == "FRAME" ||
+      node.type == "COMPONENT" ||
+      node.type == "INSTANCE" ||
+      node.type == "RECTANGLE" ||
+      node.type == "ELLIPSE" ||
+      node.type == "POLYGON" ||
+      node.type == "STAR" ||
+      node.type == "LINE" ||
+      node.type == "TEXT" ||
+      node.type == "VECTOR" ||
+      node.type == "BOOLEAN_OPERATION") &&
+    node.fillStyleId !== figma.mixed
   ) {
     return <FrameNode>node;
   }
   return undefined;
+};
+
+const textNodeWithComplexFillAndStroke = (
+  node: SceneNode | PageNode
+): TextNode | undefined => {
+  if (node.type == "TEXT" && node.fillStyleId == figma.mixed) {
+    return <TextNode>node;
+  } else {
+    return undefined;
+  }
 };
 
 const swapFill = (
@@ -125,7 +136,7 @@ const swapFill = (
 };
 
 const swapStroke = (
-  frame: FrameNode | ComponentNode,
+  frame: FrameNode | ComponentNode | TextNode,
   localStyle: ColorStyle[]
 ) => {
   if (frame.strokeStyleId) {
@@ -140,14 +151,36 @@ const swapStroke = (
   }
 };
 
+const swapMixTextFill = (textNode: TextNode, localStyle: ColorStyle[]) => {
+  if (textNode.fillStyleId == figma.mixed) {
+    textNode.getStyledTextSegments(["fillStyleId"]).forEach((segment) => {
+      if (segment.fillStyleId) {
+        const style = figma.getStyleById(segment.fillStyleId);
+        if (style?.name) {
+          const refName = createReferenceName(style.name);
+          const newId = searchStyle(localStyle, refName);
+          if (newId) {
+            textNode.setRangeFillStyleId(segment.start, segment.end, newId);
+          }
+        }
+      }
+    });
+  }
+};
+
 const swapNodeTheme = (
   node: SceneNode | PageNode,
   localStyle: ColorStyle[]
 ) => {
-  const frame = nodeWithFillAndStroke(node);
+  const frame = nodeWithSimpleFillAndStroke(node);
   if (frame) {
     swapFill(frame, localStyle);
     swapStroke(frame, localStyle);
+  }
+  const textNode = textNodeWithComplexFillAndStroke(node);
+  if (textNode) {
+    swapMixTextFill(textNode, localStyle);
+    swapStroke(textNode, localStyle);
   }
 };
 

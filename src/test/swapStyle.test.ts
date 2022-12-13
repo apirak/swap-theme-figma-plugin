@@ -1,4 +1,3 @@
-import { IconLayerComponent16 } from "@create-figma-plugin/ui";
 import { createFigma } from "figma-api-stub";
 import { swapNodeTheme } from "../swap";
 import { loadStyle } from "../utility/style";
