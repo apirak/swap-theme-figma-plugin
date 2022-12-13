@@ -79,7 +79,6 @@ describe("walk in simple node", () => {
     // swapNodeTheme(node, targetTheme);
 
     // const xs = node.getStyledTextSegments(["fillStyleId"]);
-    // console.log("xs:", xs);
     const x = 0;
     expect(x).toEqual(0);
   });

@@ -11,7 +11,7 @@ const createReferenceName = (name: string, theme: string): string => {
 };
 
 const matchWithTheme = (name: string, theme: string): boolean => {
-  return name.replace(/\s+/g, "").includes(theme);
+  return name.replace(/\s+/g, "").includes(theme.replace(/\s+/g, ""));
 };
 
 const loadStyle = (theme: string, styles: PaintStyle[]): ReferenceStyle[] => {

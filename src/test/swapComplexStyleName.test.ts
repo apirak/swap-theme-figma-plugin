@@ -41,7 +41,7 @@ describe("walk in simple node", () => {
   styleNight.name = "Night / Primary";
   styleNight.paints = createStyle();
 
-  it("should preform well when style name is empty", () => {
+  it("should preform well when style name has basket", () => {
     styleDay.name = "[Day] / Primary";
     styleNight.name = "[Night] / Primary";
 
@@ -57,12 +57,33 @@ describe("walk in simple node", () => {
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("[Night]", localStyleBasic);
 
-    console.log("t:", targetTheme);
-
     swapNodeTheme(node, targetTheme, [], "[Night]");
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "[Night] / Primary"
+    );
+  });
+
+  it("should preform well when style has name infrontof it", () => {
+    styleDay.name = "Name /[Day] / Primary";
+    styleNight.name = "Name / [Night] / Primary";
+
+    const node = figma.createRectangle();
+    node.name = "rectangle 1";
+    node.fillStyleId = styleDay.id;
+    node.strokeStyleId = styleDay.id;
+    page.appendChild(node);
+
+    testSetDayFolder("Name/[Day]");
+    testSetNightFolder("Name/[Night]");
+
+    let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
+    const targetTheme = loadStyle("Name/[Night]", localStyleBasic);
+
+    swapNodeTheme(node, targetTheme, [], "Name/[Night]");
+
+    expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
+      "Name / [Night] / Primary"
     );
   });
 });
