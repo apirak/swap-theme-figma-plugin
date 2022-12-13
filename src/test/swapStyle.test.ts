@@ -42,7 +42,7 @@ describe("walk in simple node", () => {
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
-    swapNodeTheme(node, targetTheme);
+    swapNodeTheme(node, targetTheme, []);
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"
@@ -59,7 +59,7 @@ describe("walk in simple node", () => {
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
-    swapNodeTheme(node, targetTheme);
+    swapNodeTheme(node, targetTheme, []);
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"
@@ -77,7 +77,7 @@ describe("walk in simple node", () => {
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
-    swapNodeTheme(node, targetTheme);
+    swapNodeTheme(node, targetTheme, []);
 
     if (node.fillStyleId !== figma.mixed && node.effectStyleId) {
       expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
@@ -96,7 +96,7 @@ describe("walk in simple node", () => {
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
-    swapNodeTheme(node, targetTheme);
+    swapNodeTheme(node, targetTheme, []);
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"

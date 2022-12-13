@@ -1,4 +1,4 @@
-type ColorStyle = {
+type ReferenceStyle = {
   id: string;
   name: string;
   refName: string;
@@ -14,8 +14,8 @@ const matchWithTheme = (name: string, theme: string): boolean => {
   return regexp.test(name.replace(/\s+/g, ""));
 };
 
-const loadStyle = (theme: string, styles: PaintStyle[]): ColorStyle[] => {
-  let allStyle: ColorStyle[] = [];
+const loadStyle = (theme: string, styles: PaintStyle[]): ReferenceStyle[] => {
+  let allStyle: ReferenceStyle[] = [];
 
   styles.forEach((style) => {
     if (matchWithTheme(style.name, theme)) {
@@ -30,11 +30,38 @@ const loadStyle = (theme: string, styles: PaintStyle[]): ColorStyle[] => {
   return allStyle;
 };
 
-const loadLocalStyle = (theme: string): ColorStyle[] => {
+const loadEffect = (theme: string, styles: EffectStyle[]): ReferenceStyle[] => {
+  let allEffect: ReferenceStyle[] = [];
+
+  styles.forEach((style) => {
+    if (matchWithTheme(style.name, theme)) {
+      allEffect.push({
+        id: style.id,
+        name: style.name,
+        refName: createReferenceName(style.name),
+      });
+    }
+  });
+
+  return allEffect;
+};
+
+const loadLocalEffect = (theme: string): ReferenceStyle[] => {
+  const localEffects = figma.getLocalEffectStyles();
+  return loadEffect(theme, localEffects);
+};
+
+const loadLocalStyle = (theme: string): ReferenceStyle[] => {
   const localStyles = figma.getLocalPaintStyles();
   return loadStyle(theme, localStyles);
 };
 
-export { createReferenceName, loadLocalStyle, loadStyle };
+export {
+  createReferenceName,
+  loadLocalStyle,
+  loadLocalEffect,
+  loadEffect,
+  loadStyle,
+};
 
-export type { ColorStyle };
+export type { ReferenceStyle };

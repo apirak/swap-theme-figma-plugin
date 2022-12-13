@@ -62,7 +62,7 @@ function Plugin() {
     <Container space='medium'>
       <VerticalSpace space='large' />
       <Text>
-        <Muted>Set Folder name for Day theme and Night theme.</Muted>
+        <Muted>Set folder name for Day theme and Night theme.</Muted>
       </Text>
       <VerticalSpace space='extraLarge' />
       <div class={styles.themeRow}>
