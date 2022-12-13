@@ -1,5 +1,11 @@
 import { createFigma } from "figma-api-stub";
-import { swapNodeTheme, getCount, resetCount } from "../swap";
+import {
+  swapNodeTheme,
+  getCount,
+  resetCount,
+  setDayFolder,
+  setNightFolder,
+} from "../swap";
 import { loadStyle } from "../utility/style";
 
 describe("walk in simple node", () => {
@@ -48,7 +54,7 @@ describe("walk in simple node", () => {
     const targetTheme = loadStyle("Night", localStyleBasic);
 
     resetCount();
-    swapNodeTheme(node, targetTheme, []);
+    swapNodeTheme(node, targetTheme, [], "Night");
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"
@@ -67,7 +73,7 @@ describe("walk in simple node", () => {
     const targetTheme = loadStyle("Night", localStyleBasic);
 
     resetCount();
-    swapNodeTheme(node, targetTheme, []);
+    swapNodeTheme(node, targetTheme, [], "Night");
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"
@@ -89,7 +95,7 @@ describe("walk in simple node", () => {
     const targetTheme = loadStyle("Night", localStyleBasic);
 
     resetCount();
-    swapNodeTheme(instant, targetTheme, []);
+    swapNodeTheme(instant, targetTheme, [], "Night");
 
     expect(figma.getStyleById(instant.fillStyleId)?.name).toEqual(
       "Night / Primary"
@@ -108,7 +114,7 @@ describe("walk in simple node", () => {
     const targetTheme = loadStyle("Night", localStyleBasic);
 
     resetCount();
-    swapNodeTheme(node, targetTheme, []);
+    swapNodeTheme(node, targetTheme, [], "Night");
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"
@@ -127,7 +133,7 @@ describe("walk in simple node", () => {
     const targetTheme = loadStyle("Night", localStyleBasic);
 
     resetCount();
-    swapNodeTheme(node, targetTheme, []);
+    swapNodeTheme(node, targetTheme, [], "Night");
 
     expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
       "Night / Primary"

@@ -15,6 +15,10 @@ const storageKeys = {
   NIGHT: "nightFromStorage",
 };
 
+const oppositeTheme = (current: string): string => {
+  return current == dayFolder ? nightFolder : dayFolder;
+};
+
 const initPlugin = async () => {
   let dayFolderStorage = await figma.clientStorage.getAsync(storageKeys.DAY);
   let nightFolderStorage = await figma.clientStorage.getAsync(
@@ -34,14 +38,20 @@ const initPlugin = async () => {
 };
 
 const setDayFolder = async (name: string) => {
-  console.log("day x");
   await figma.clientStorage.setAsync(storageKeys.DAY, name);
   dayFolder = name;
 };
 
 const setNightFolder = async (name: string) => {
-  console.log("night x");
   await figma.clientStorage.setAsync(storageKeys.NIGHT, name);
+  nightFolder = name;
+};
+
+const testSetDayFolder = (name: string) => {
+  dayFolder = name;
+};
+
+const testSetNightFolder = (name: string) => {
   nightFolder = name;
 };
 
@@ -131,12 +141,13 @@ const textNodeWithComplexFillAndStroke = (
 
 const swapEffect = (
   frame: FrameNode | ComponentNode | TextNode,
-  localStyle: ReferenceStyle[]
+  localStyle: ReferenceStyle[],
+  theme: string
 ) => {
   if (frame.effectStyleId) {
     const style = figma.getStyleById(frame.effectStyleId);
     if (style?.name) {
-      const refName = createReferenceName(style.name);
+      const refName = createReferenceName(style.name, oppositeTheme(theme));
       const newId = searchStyle(localStyle, refName);
       if (newId) {
         frame.effectStyleId = newId;
@@ -148,12 +159,13 @@ const swapEffect = (
 
 const swapFill = (
   frame: FrameNode | ComponentNode,
-  localStyle: ReferenceStyle[]
+  localStyle: ReferenceStyle[],
+  theme: string
 ) => {
   if (frame.fillStyleId !== figma.mixed && frame.fillStyleId) {
     const style = figma.getStyleById(frame.fillStyleId);
     if (style?.name) {
-      const refName = createReferenceName(style.name);
+      const refName = createReferenceName(style.name, oppositeTheme(theme));
       const newId = searchStyle(localStyle, refName);
       if (newId) {
         frame.fillStyleId = newId;
@@ -165,12 +177,13 @@ const swapFill = (
 
 const swapStroke = (
   frame: FrameNode | ComponentNode | TextNode,
-  localStyle: ReferenceStyle[]
+  localStyle: ReferenceStyle[],
+  theme: string
 ) => {
   if (frame.strokeStyleId) {
     const style = figma.getStyleById(frame.strokeStyleId);
     if (style?.name) {
-      const refName = createReferenceName(style.name);
+      const refName = createReferenceName(style.name, oppositeTheme(theme));
       const newId = searchStyle(localStyle, refName);
       if (newId) {
         frame.strokeStyleId = newId;
@@ -180,13 +193,17 @@ const swapStroke = (
   }
 };
 
-const swapMixTextFill = (textNode: TextNode, localStyle: ReferenceStyle[]) => {
+const swapMixTextFill = (
+  textNode: TextNode,
+  localStyle: ReferenceStyle[],
+  theme: string
+) => {
   if (textNode.fillStyleId == figma.mixed) {
     textNode.getStyledTextSegments(["fillStyleId"]).forEach((segment) => {
       if (segment.fillStyleId) {
         const style = figma.getStyleById(segment.fillStyleId);
         if (style?.name) {
-          const refName = createReferenceName(style.name);
+          const refName = createReferenceName(style.name, oppositeTheme(theme));
           const newId = searchStyle(localStyle, refName);
           if (newId) {
             textNode.setRangeFillStyleId(segment.start, segment.end, newId);
@@ -201,19 +218,20 @@ const swapMixTextFill = (textNode: TextNode, localStyle: ReferenceStyle[]) => {
 const swapNodeTheme = (
   node: SceneNode | PageNode,
   localStyle: ReferenceStyle[],
-  localEffect: ReferenceStyle[]
+  localEffect: ReferenceStyle[],
+  theme: string
 ) => {
   const frame = nodeWithSimpleFillAndStroke(node);
   if (frame) {
-    swapFill(frame, localStyle);
-    swapStroke(frame, localStyle);
-    swapEffect(frame, localEffect);
+    swapFill(frame, localStyle, theme);
+    swapStroke(frame, localStyle, theme);
+    swapEffect(frame, localEffect, theme);
   }
   const textNode = textNodeWithComplexFillAndStroke(node);
   if (textNode) {
-    swapMixTextFill(textNode, localStyle);
-    swapStroke(textNode, localStyle);
-    swapEffect(textNode, localEffect);
+    swapMixTextFill(textNode, localStyle, theme);
+    swapStroke(textNode, localStyle, theme);
+    swapEffect(textNode, localEffect, theme);
   }
 };
 
@@ -223,7 +241,7 @@ const swapTheme = (theme: string) => {
   const selected = figma.currentPage.selection;
   resetCount();
   walkNodes(selected, (node: SceneNode | PageNode) => {
-    swapNodeTheme(node, targetTheme, targetEffect);
+    swapNodeTheme(node, targetTheme, targetEffect, theme);
   });
 };
 
@@ -267,7 +285,15 @@ export {
   setNightFolder,
   getDayFolder,
   getNightFolder,
+  oppositeTheme,
 };
 
 // For testing
-export { walkNodes, swapNodeTheme, getCount, resetCount };
+export {
+  walkNodes,
+  swapNodeTheme,
+  getCount,
+  resetCount,
+  testSetDayFolder,
+  testSetNightFolder,
+};

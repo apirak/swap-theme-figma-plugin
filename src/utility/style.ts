@@ -4,14 +4,14 @@ type ReferenceStyle = {
   refName: string;
 };
 
-const createReferenceName = (name: string): string => {
-  let refName = name.replace(/\s+/g, "").replace(/.+?\//, "");
+const createReferenceName = (name: string, theme: string): string => {
+  let refName = name.replace(/\s+/g, ""); //remove space
+  refName = refName.replace(`${theme}/`, "");
   return refName;
 };
 
 const matchWithTheme = (name: string, theme: string): boolean => {
-  const regexp = new RegExp(`^${theme}`, "i");
-  return regexp.test(name.replace(/\s+/g, ""));
+  return name.replace(/\s+/g, "").includes(theme);
 };
 
 const loadStyle = (theme: string, styles: PaintStyle[]): ReferenceStyle[] => {
@@ -22,7 +22,7 @@ const loadStyle = (theme: string, styles: PaintStyle[]): ReferenceStyle[] => {
       allStyle.push({
         id: style.id,
         name: style.name,
-        refName: createReferenceName(style.name),
+        refName: createReferenceName(style.name, theme),
       });
     }
   });
@@ -38,7 +38,7 @@ const loadEffect = (theme: string, styles: EffectStyle[]): ReferenceStyle[] => {
       allEffect.push({
         id: style.id,
         name: style.name,
-        refName: createReferenceName(style.name),
+        refName: createReferenceName(style.name, theme),
       });
     }
   });

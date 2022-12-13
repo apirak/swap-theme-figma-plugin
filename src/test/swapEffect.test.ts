@@ -68,7 +68,7 @@ describe("walk in simple node", () => {
     const targetTheme = loadEffect("Night", localStyleBasic);
 
     resetCount();
-    swapNodeTheme(node, [], targetTheme);
+    swapNodeTheme(node, [], targetTheme, "Night");
 
     expect(figma.getStyleById(node.effectStyleId)?.name).toEqual(
       "Night / Drop Primary"
