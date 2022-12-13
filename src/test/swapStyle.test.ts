@@ -32,6 +32,11 @@ describe("walk in simple node", () => {
   styleNight.name = "Night / Primary";
   styleNight.paints = createStyle();
 
+  const styleEmptyName: PaintStyle = figma.createPaintStyle();
+  styleEmptyName.type = "PAINT";
+  styleEmptyName.name = "";
+  styleEmptyName.paints = createStyle();
+
   it("should swap Frame style from Day to Night", () => {
     const node = figma.createFrame();
     node.name = "Frame 1";
@@ -94,6 +99,23 @@ describe("walk in simple node", () => {
     page.appendChild(node);
 
     let localStyleBasic: PaintStyle[] = [styleDay, styleNight];
+    const targetTheme = loadStyle("Night", localStyleBasic);
+
+    swapNodeTheme(node, targetTheme, []);
+
+    expect(figma.getStyleById(node.fillStyleId)?.name).toEqual(
+      "Night / Primary"
+    );
+  });
+
+  it("should preform well when style name is empty", () => {
+    const node = figma.createRectangle();
+    node.name = "rectangle 1";
+    node.fillStyleId = styleDay.id;
+    node.strokeStyleId = styleDay.id;
+    page.appendChild(node);
+
+    let localStyleBasic: PaintStyle[] = [styleDay, styleNight, styleEmptyName];
     const targetTheme = loadStyle("Night", localStyleBasic);
 
     swapNodeTheme(node, targetTheme, []);
