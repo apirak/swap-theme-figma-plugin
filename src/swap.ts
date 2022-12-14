@@ -33,7 +33,7 @@ const initPlugin = async () => {
   if (typeof nightFolderStorage == "undefined") {
     await figma.clientStorage.setAsync(storageKeys.NIGHT, nightFolder);
   } else {
-    dayFolder = dayFolderStorage;
+    nightFolder = nightFolderStorage;
   }
 };
 
@@ -235,7 +235,7 @@ const swapNodeTheme = (
   }
 };
 
-const swapTheme = (theme: string) => {
+const swapTheme = async (theme: string) => {
   const targetTheme = loadLocalStyle(theme);
   const targetEffect = loadLocalEffect(theme);
   const selected = figma.currentPage.selection;
@@ -253,16 +253,18 @@ const notifySwap = (theme: string) => {
   figma.notify(`Swap to ${theme} (${count} ${prualStyle(count)})`);
 };
 
-const swapToDay = () => {
-  swapTheme(dayFolder);
-  notifySwap("Day 🌞");
-  figma.closePlugin();
+const swapToDay = async () => {
+  await initPlugin();
+  await swapTheme(dayFolder);
+  await notifySwap("Day 🌞");
+  await figma.closePlugin();
 };
 
-const swapToNight = () => {
-  swapTheme(nightFolder);
-  notifySwap("Night 🌚");
-  figma.closePlugin();
+const swapToNight = async () => {
+  await initPlugin();
+  await swapTheme(nightFolder);
+  await notifySwap("Night 🌚");
+  await figma.closePlugin();
 };
 
 const justSwapToDay = () => {
