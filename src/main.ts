@@ -34,7 +34,7 @@ export default function () {
     justSwapToNight();
   });
 
-  showUI({ height: 150, width: 300 });
+  showUI({ height: 150, width: 260 });
   const setupUI = (async () => {
     await initPlugin();
     await emit<SetDayFolderHandler>("SET_DAY_FOLDER", getDayFolder());
